@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/6e582a71-617c-44d0-909c-388a0c1acd54/resourceGroups/DEV/providers/Microsoft.Web/sites/webcliente-coti",
+  "appService.deploySubpath": "."
+}
