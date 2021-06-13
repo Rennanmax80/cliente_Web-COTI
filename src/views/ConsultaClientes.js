@@ -1,6 +1,8 @@
 import React from 'react';
 import * as services from '../services/clienteServices';
 import { Container, Divider, Button, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import { formatDate } from '../helpers/formatHelpers';
+// import { seriesType } from 'highcharts';
 
 class ConsultaClientes extends React.Component {
 
@@ -14,6 +16,11 @@ class ConsultaClientes extends React.Component {
 
     //função executada antes do componente ser renderizado..
     componentDidMount() {
+        this.consultarClientes();
+    }
+
+    //função para realizar a consulta de clientes
+    consultarClientes() {
         services.getAll()
             .then(
                 data => {
@@ -27,6 +34,22 @@ class ConsultaClientes extends React.Component {
                     console.log(e);
                 }
             )
+    }
+
+    //função para excluir um cliente
+    excluirCliente(cliente) {
+        if (window.confirm(`Deseja realmente excluir o cliente ${cliente.nome}?`)) {
+            services.remove(cliente.id).then(
+                data => {
+                    alert(`Cliente ${cliente.nome} excluido com sucesso`);
+                    this.consultarClientes();
+                }
+            ).catch(
+                e => {
+                    alert('Erro ao excluir o cliente')
+                }
+            )
+        }
     }
 
     render() {
@@ -57,19 +80,23 @@ class ConsultaClientes extends React.Component {
                                             <TableRow>
                                                 <TableCell>{item.nome}</TableCell>
                                                 <TableCell>{item.email}</TableCell>
-                                                <TableCell>{item.dataCadastro}</TableCell>
-                                                <TableCell>{item.dataUltimaAlteracao}</TableCell>
+                                                <TableCell>{formatDate(item.dataCadastro)}</TableCell>
+                                                <TableCell>{formatDate(item.dataUltimaAlteracao)}</TableCell>
                                                 <TableCell width="200">
                                                     <Button size="small"
                                                         variant="contained"
                                                         color="primary"
                                                         style={{ marginRight: 4 }}
+                                                        onClick={() => window.location.href = "/admin#/edicao-cliente/" + item.id}
                                                     >
                                                         Alterar
                                                     </Button>
                                                     <Button size="small"
                                                         variant="contained"
                                                         color="secondary"
+                                                        onClick={
+                                                            () => self.excluirCliente(item)
+                                                        }
                                                     >
                                                         Excluir
                                                     </Button>
@@ -95,5 +122,3 @@ class ConsultaClientes extends React.Component {
 }
 
 export default ConsultaClientes;
-
-
